@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const NotificationEvent = require("../models/NotificationEvent");
+const NotificationEvent = require("../models/NotificationEvent.js");
 
 exports.checkDuplicate = async (event) => {
 

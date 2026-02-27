@@ -1,7 +1,7 @@
-const Rule = require("../models/Rule");
-const dedupeService = require("./dedupe.service");
-const fatigueService = require("./fatigue.service");
-const scoringService = require("./scoring.service");
+const Rule = require("../models/Rule.js");
+const dedupeService = require("./dedupe.service.js");
+const fatigueService = require("./fatigue.service.js");
+const scoringService = require("./scoring.service.js");
 
 exports.evaluate = async (event) => {
 

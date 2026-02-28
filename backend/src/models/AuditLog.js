@@ -22,6 +22,19 @@ const AuditSchema = new mongoose.Schema({
     required: true
   },
   score: Number
+  ,
+  ai_model: {
+    type: String,
+    default: null
+  },
+  ai_confidence: {
+    type: Number,
+    default: null
+  },
+  ai_fallback_used: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("AuditLog", AuditSchema);

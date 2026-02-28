@@ -14,7 +14,10 @@ exports.evaluateNotification = async (req, res) => {
       event_id: savedEvent._id,
       decision: result.decision,
       reason: result.reason,
-      score: result.score || null
+      score: result.score || null,
+      ai_model: result.ai_model || null,
+      ai_confidence: result.ai_confidence || null,
+      ai_fallback_used: result.ai_fallback_used || false
     });
     res.json(result);
   } catch (error) {

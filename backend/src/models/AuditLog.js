@@ -1,40 +1,26 @@
 const mongoose = require("mongoose");
 
-/**
- * AuditLog Schema
- * - event_id: Related notification event (required)
- * - decision: NOW/LATER/NEVER (required)
- * - reason: Explanation for decision (required)
- * - score: Priority score (optional)
- */
-const AuditSchema = new mongoose.Schema({
-  event_id: {
-    type: String,
-    required: true
+const AuditSchema = new mongoose.Schema(
+  {
+    event_id: { type: String, required: true, index: true },
+    user_id: { type: String, required: true, index: true },
+    event_type: { type: String, required: true, index: true },
+    decision: { type: String, enum: ["NOW", "LATER", "NEVER"], required: true, index: true },
+    reason: { type: String, required: true },
+    decision_source: { type: String, required: true },
+    rule_id: { type: String, default: null },
+    rule_name: { type: String, default: null },
+    near_duplicate_score: { type: Number, default: null },
+    ai_model: { type: String, default: null },
+    ai_confidence: { type: Number, default: null },
+    ai_fallback_used: { type: Boolean, default: false },
+    metadata: { type: Object, default: {} }
   },
-  decision: {
-    type: String,
-    enum: ["NOW", "LATER", "NEVER"],
-    required: true
-  },
-  reason: {
-    type: String,
-    required: true
-  },
-  score: Number
-  ,
-  ai_model: {
-    type: String,
-    default: null
-  },
-  ai_confidence: {
-    type: Number,
-    default: null
-  },
-  ai_fallback_used: {
-    type: Boolean,
-    default: false
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
+
+AuditSchema.pre("findOneAndUpdate", function denyUpdate(next) {
+  return next(new Error("Audit logs are append-only"));
+});
 
 module.exports = mongoose.model("AuditLog", AuditSchema);

@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-    await mongoose.connect(
-        process.env.MONGO_URI
-    )
-}
+  const uri = process.env.MONGO_URI;
+  if (!uri) {
+    throw new Error("MONGO_URI is required");
+  }
+
+  await mongoose.connect(uri, { autoIndex: true });
+};
 
 module.exports = connectDB;

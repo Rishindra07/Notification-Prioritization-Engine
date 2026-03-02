@@ -21,7 +21,7 @@ This repository contains the MERN implementation for the Round 2 Build & Ship ch
 4. `npm install`
 5. `npm run dev`
 
-Backend base URL: `http://localhost:5000`
+Backend base URL: `https://notification-prioritization-engine.onrender.com`
 Health: `http://localhost:5000/api/health`
 
 ### Frontend
@@ -30,7 +30,7 @@ Health: `http://localhost:5000/api/health`
 3. `npm install`
 4. `npm run dev`
 
-Frontend URL: `http://localhost:5173`
+Frontend URL: `https://notification-prioritization-engine-lramnhbct.vercel.app/`
 
 ## Demo Credentials (shown on login page)
 - Admin: `admin@demo.com / Admin@123`

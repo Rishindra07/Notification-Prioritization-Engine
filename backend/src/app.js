@@ -9,21 +9,44 @@ const { authMiddleware } = require("./middleware/auth.middleware");
 
 
 const app = express();
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || "*",
-  credentials: true
-}));
-app.use(express.json({ limit: "1mb" }));
+const getAllowedOrigins = () => {
+  const explicitOrigins = (process.env.CORS_ORIGIN || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ORIGIN || "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
-  return next();
-});
+  const vercelUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : null;
+
+  return new Set([...explicitOrigins, ...(vercelUrl ? [vercelUrl] : [])]);
+};
+
+const allowedOrigins = getAllowedOrigins();
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow requests from non-browser clients and same-origin server calls.
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.has("*") || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+
+      // Optional fallback to support Vercel preview deployments.
+      if (/^https:\/\/notification-prioritization-engine-[a-z0-9-]+\.vercel\.app$/i.test(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin not allowed by CORS: ${origin}`));
+    },
+    credentials: true,
+  })
+);
+app.use(express.json({ limit: "1mb" }));
 
 app.get("/", (req, res) => {
   res.json({ name: "notification-prioritization-engine", status: "ok" });
